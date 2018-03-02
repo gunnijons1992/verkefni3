@@ -1,7 +1,7 @@
 /* todo sækja pakka sem vantar  */
 const { Client } = require('pg');
-const connectionString = process.env.DATABASE_URL || 'postgres://:@localhost/notes';
 
+const connectionString = process.env.DATABASE_URL || 'postgres://:@localhost/notes';
 /**
  * Create a note asynchronously.
  *
@@ -13,17 +13,16 @@ const connectionString = process.env.DATABASE_URL || 'postgres://:@localhost/not
  * @returns {Promise} Promise representing the object result of creating the note
  */
 async function create({ title, text, datetime } = {}) {
-  const client = new Client ({ connectionString });
+  const client = new Client({ connectionString });
   await client.connect();
   const query = 'INSERT INTO notes (title, text, datetime) VALUES ($1, $2, $3)';
   const values = [title, text, datetime];
   try {
-    await client.query(query, values)
+    await client.query(query, values);
   } catch (err) {
     console.error('Villa við að setja inn gögn!');
     throw err;
-  }
-  finally {
+  } finally {
     await client.end;
   }
 }
@@ -34,7 +33,7 @@ async function create({ title, text, datetime } = {}) {
  * @returns {Promise} Promise representing an array of all note objects
  */
 async function readAll() {
-  const client = new Client ({ connectionString });
+  const client = new Client({ connectionString });
   await client.connect();
 
   try {
@@ -57,7 +56,7 @@ async function readAll() {
  * @returns {Promise} Promise representing the note object or null if not found
  */
 async function readOne(id) {
-  const client = new Client ({ connectionString });
+  const client = new Client({ connectionString });
   await client.connect();
   try {
     const result = await client.query('SELECT * FROM notes WHERE id=' + id);
@@ -83,7 +82,7 @@ async function readOne(id) {
  * @returns {Promise} Promise representing the object result of creating the note
  */
 async function update(id, { title, text, datetime } = {}) {
-  const client = new Client ({ connectionString });
+  const client = new Client({ connectionString });
   await client.connect();
   try {
     const values = [title, text, datetime];
@@ -105,19 +104,19 @@ async function update(id, { title, text, datetime } = {}) {
  *
  * @returns {Promise} Promise representing the boolean result of creating the note
  */
- async function del(id) {
-   const client = new Client({ connectionString });
-   await client.connect();
-   try {
-     await client.query('DELETE FROM notes WHERE id = ' + id);// eslint-disable-line
-     return 'jeeei';
-   } catch (err) {
-     console.error('Error deleting data');
-     throw err;
-   } finally {
-     await client.end();
-   }
- }
+async function del(id) {
+  const client = new Client({ connectionString });
+  await client.connect();
+  try {
+    await client.query('DELETE FROM notes WHERE id = ' + id);// eslint-disable-line
+    return 'jeeei';
+  } catch (err) {
+    console.error('Error deleting data');
+    throw err;
+  } finally {
+    await client.end();
+  }
+}
 
 
 module.exports = {
